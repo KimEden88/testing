@@ -1,15 +1,20 @@
-import { NavLink } from 'react-router-dom';
-import './Navigation.css';
-import { webPaths } from '../../../router/webPaths';
-import { animals } from '../../../data/animals';
+import { useQuery } from "react-query";
+import { NavLink } from "react-router-dom";
+import { getRecipes } from "../../../contentful/recipes";
+import { webPaths } from "../../../router/webPaths";
+import "./Navigation.css";
 
 export const Navigation = () => {
+  const { data } = useQuery("recipes", getRecipes);
+
+  console.log('data:', data)
+
   return (
-    <>
+    <nav className="navigation">
       <NavLink
         to={webPaths.home}
         className={({ isActive, isPending }) =>
-          isPending ? 'pending' : isActive ? 'active' : ''
+          isPending ? "pending" : isActive ? "active" : ""
         }
       >
         Home
@@ -17,22 +22,22 @@ export const Navigation = () => {
       <NavLink
         to={webPaths.temp}
         className={({ isActive, isPending }) =>
-          isPending ? 'pending' : isActive ? 'active' : ''
+          isPending ? "pending" : isActive ? "active" : ""
         }
       >
         Temp
       </NavLink>
-      {animals.map((animal) => (
+      {data && data.items.map((recipe) => (
         <NavLink
-          key={animal.id}
-          to={`/animals/${animal.slug}`}
+          key={recipe.sys.id}
+          to={`/recipes/${recipe.sys.id}`}
           className={({ isActive, isPending }) =>
-            isPending ? 'pending' : isActive ? 'active' : ''
+            isPending ? "pending" : isActive ? "active" : ""
           }
         >
-          {animal.slug}
+          {recipe.fields.title}
         </NavLink>
       ))}
-    </>
+    </nav>
   );
 };

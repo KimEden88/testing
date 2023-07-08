@@ -1,5 +1,9 @@
 import { client } from './client';
 
 export const getRecipes = async () => {
-  await client.getEntry('1uV8E2qdY836gMltUwCF5n');
+  return await client.getEntries({content_type: 'recipe'});
 };
+
+export const getRecipe = async (id) => {
+  return await client.getEntry(`${id}`);
+}
